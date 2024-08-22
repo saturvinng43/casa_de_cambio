@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a la Casa de Cambio A & I</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .navbar {
+            background-color: #004d99;
+            color: #fff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            animation: navbarAnimation 1s ease-in-out;
+        }
+        .navbar img {
+            height: 50px; /* Ajusta el tamaño del logo según tus necesidades */
+            transition: transform 0.3s ease-in-out;
+        }
+        .navbar img:hover {
+            transform: scale(1.1);
+        }
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            position: relative;
+            transition: color 0.3s ease-in-out;
+        }
+        .navbar a::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: #fff;
+            transition: width 0.3s ease-in-out;
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+        }
+        .navbar a:hover::after {
+            width: 100%;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: 40px auto;
+            text-align: center;
+            border: 1px solid #ddd;
+            animation: containerAnimation 1s ease-in-out;
+        }
+        .container img {
+            height: 120px; /* Ajusta el tamaño del logo según tus necesidades */
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: logoAnimation 1s ease-in-out forwards;
+        }
+        h1 {
+            font-size: 2.8em;
+            color: #004d99;
+            margin: 0;
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out 0.5s forwards;
+        }
+        p {
+            font-size: 1.3em;
+            color: #555;
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out 1s forwards;
+        }
+        .footer {
+            background-color: #004d99;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animaciones */
+        @keyframes navbarAnimation {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes containerAnimation {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes logoAnimation {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <img src="logo.png" alt="Logo">
+        <div>
+            <a href="/login.html">Iniciar Sesión</a>
+            <a href="/register.html">Registrarse</a>
+        </div>
+    </div>
+    <div class="container">
+        <img src="logo.png" alt="Logo">
+        <h1>Bienvenido a la Casa de Cambio A & I</h1>
+        <p>Estamos encantados de tenerte aquí. ¡Explora nuestros servicios y ofertas!</p>
+    </div>
+    <div class="footer">
+        © 2024 Casa de Cambio A & I. Todos los derechos reservados.
+    </div>
+</body>
+</html>

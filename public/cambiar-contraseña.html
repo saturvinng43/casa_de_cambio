@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambiar Contraseña</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 500px;
+            width: 100%;
+            margin: 20px auto;
+            flex: 1;
+        }
+
+        h1 {
+            color: #4a90e2;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin: 10px 0;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #357abd;
+        }
+
+        .questions-container {
+            margin: 20px 0;
+        }
+
+        .questions-container label {
+            font-weight: normal;
+            color: #666;
+        }
+
+        .alert, .success {
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .alert {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+    <script>
+        async function getSecurityQuestions() {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                displayMessage('Por favor, ingrese su correo electrónico.', 'alert');
+                return;
+            }
+
+            const response = await fetch('/security-questions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await response.json();
+
+            const questionsContainer = document.getElementById('questions');
+            questionsContainer.innerHTML = '';
+
+            if (data.success) {
+                data.questions.forEach((question, index) => {
+                    questionsContainer.innerHTML += `
+                        <label>${question.question}</label>
+                        <input type="text" id="answer${index}" name="answer${index}" required />
+                    `;
+                });
+                displayMessage('', ''); // Clear any previous messages
+            } else {
+                displayMessage(data.message, 'alert');
+            }
+        }
+
+        async function changePassword() {
+            const email = document.getElementById('email').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const answers = {};
+
+            if (!email || !newPassword) {
+                displayMessage('Por favor, complete todos los campos.', 'alert');
+                return;
+            }
+
+            // Recolectar respuestas de los inputs
+            document.querySelectorAll('#questions input').forEach((input) => {
+                const questionLabel = input.previousElementSibling.textContent;
+                answers[questionLabel] = input.value;
+            });
+
+            const response = await fetch('/change-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, answers, newPassword })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                displayMessage(data.message, 'success');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000); // Redirigir después de 2 segundos
+            } else {
+                displayMessage(data.message, 'alert');
+            }
+        }
+
+        function displayMessage(message, type) {
+            const messageContainer = document.getElementById('message');
+            messageContainer.className = type;
+            messageContainer.innerHTML = message;
+        }
+    </script>
+</head>
+<body>
+    <div class="header">
+        <a href="index.html">Regresar al Inicio</a>
+    </div>
+    <div class="container">
+        <h1>Cambiar Contraseña</h1>
+        <label for="email">Correo Electrónico:</label>
+        <input type="email" id="email" required />
+        <button onclick="getSecurityQuestions()">Obtener Preguntas</button>
+
+        <div id="questions" class="questions-container"></div>
+
+        <label for="newPassword">Nueva Contraseña:</label>
+        <input type="password" id="newPassword" required />
+
+        <button onclick="changePassword()">Cambiar Contraseña</button>
+
+        <div id="message"></div>
+    </div>
+</body>
+</html>

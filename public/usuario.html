@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuario - Casa de Cambio A & I</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .navbar {
+            background-color: #004d99;
+            color: #fff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .navbar .logo {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .navbar .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .navbar .dropdown-button {
+            background-color: #0069d9;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+        .navbar .dropdown-button:hover {
+            background-color: #0056b3;
+        }
+        .navbar .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            min-width: 160px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .navbar .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            transition: background-color 0.3s ease;
+        }
+        .navbar .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .navbar .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .container {
+            margin-top: 100px; /* Asegura que el contenedor no esté oculto debajo de la navbar */
+            padding: 2rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 1rem;
+            color: #004d99;
+        }
+        .user-info {
+            font-size: 1.25rem;
+            color: #555;
+            margin-bottom: 2rem;
+        }
+        .user-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background-color: #f4f4f9;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            position: relative;
+        }
+        .user-card-icon {
+            font-size: 3rem;
+            color: #004d99;
+            position: absolute;
+            top: -1.5rem;
+            left: -1.5rem;
+            background-color: #fff;
+            border-radius: 50%;
+            padding: 0.5rem;
+        }
+        .user-card-info {
+            margin-left: 4rem;
+            text-align: left;
+            flex-grow: 1;
+        }
+        .user-card-info h2 {
+            margin: 0;
+            color: #333;
+        }
+        .user-card-info p {
+            margin: 0.5rem 0 0;
+            color: #555;
+        }
+        .user-card-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        .user-card-buttons button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .user-card-buttons .withdraw-button {
+            background-color: #28a745;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+        .user-card-buttons .withdraw-button:hover {
+            background-color: #218838;
+        }
+        .user-card-buttons .transfer-button {
+            background-color: #17a2b8;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+        .user-card-buttons .transfer-button:hover {
+            background-color: #117a8b;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">Casa de Cambio A & I</div>
+        <div class="dropdown">
+            <button class="dropdown-button">Opciones</button>
+            <div class="dropdown-content">
+                <a href="#" onclick="logout()">Cerrar Sesión</a>
+                <a href="/change-password.html">Cambiar Contraseña</a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <h1>Bienvenido a tu perfil</h1>
+        <p class="user-info">¡Has iniciado sesión exitosamente!</p>
+
+        <div class="user-card">
+            <div class="user-card-icon">👤</div>
+            <div class="user-card-info">
+                <h2 id="usernameDisplay">Nombre de Usuario</h2>
+                <p>Saldo: $0.00</p>
+            </div>
+            <div class="user-card-buttons">
+                <button class="withdraw-button">Retirar</button>
+                <button class="transfer-button">Transferir</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para cerrar sesión
+        function logout() {
+            fetch('/api/logout', { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        localStorage.removeItem('username');
+                        window.location.href = '/';
+                    } else {
+                        alert('Error al cerrar sesión');
+                    }
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const username = localStorage.getItem('username') || 'Usuario';
+            document.getElementById('userName').textContent = username;
+
+            // Mostrar nombre de usuario en la tarjeta
+            document.getElementById('usernameDisplay').textContent = username;
+        });
+    </script>
+</body>
+</html>
